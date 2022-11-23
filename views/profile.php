@@ -1,6 +1,34 @@
 <?php
 session_start();
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    include "../includes/config/database.php";
+    $storedEmail =  $_SESSION['email'];
+
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $email = $_POST['email'];
+
+    $sql = "UPDATE `user_details` SET `firstname`='$firstname',`lastname`='$lastname',`email`='$email' WHERE `email` =  '$storedEmail' ";
+    $result = $conn->query($sql);
+    if ($result) {
+
+        echo 'Records updated';
+
+        $sql = "SELECT `*` FROM `user_details`";
+        $result = $conn->query($sql);
+        $updated = $result->fetch_assoc();
+
+        $_SESSION['firstname'] = $updated['firstname'];
+        $_SESSION['lastname'] = $updated['lastname'];
+        $_SESSION['email'] = $updated['email'];
+        $_SESSION['password'] = $updated['password'];
+    } else {
+        echo 'Error ' . $conn->error;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
