@@ -1,6 +1,8 @@
 <?php
+
 session_start();
 
+//to update details
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     include "../includes/config/database.php";
@@ -26,6 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['password'] = $updated['password'];
     } else {
         echo 'Error ' . $conn->error;
+    }
+}
+//to delete the account
+
+if(isset($_POST['delete-button'])){
+    include "../includes/config/database.php";
+    $storedEmail =  $_SESSION['email'];
+    $sql = "DELETE FROM `user_details` WHERE `email` = '$storedEmail'";
+    $result = $conn->query($sql);
+    if ($result) {
+        session_destroy();
+        header('location:../index.php');
+    }else{
+        echo $conn->error;
     }
 }
 
@@ -111,6 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             width: 100%;
             display: flex;
         }
+
+        #delete-button {
+            width: fit-content;
+        }
+
+        #delete-button:hover {
+            background-color: red;
+        }
     </style>
 </head>
 
@@ -127,9 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" name="firstname" placeholder="Name" value="<?php echo $_SESSION['firstname']; ?>"><br><br>
                 <input type="text" name="lastname" placeholder="Surname" value="<?php echo $_SESSION['lastname']; ?>"><br><br>
                 <input type="email" name="email" placeholder="Email address" value="<?php echo $_SESSION['email']; ?>"><br><br>
-                <div id="update-button-container"><input type="submit" value="Update" id="update-button"></div>
+                <div id="update-button-container"><input type="submit" value="Update" id="update-button">
+                    <form action="profile.php" method="GET">
+                        <input type="submit" value="Delete Account" name="delete-button" id="delete-button">
+                    </form>
+                </div>
             </form>
-
 
         </div>
     </section>
