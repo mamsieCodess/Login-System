@@ -12,13 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lastname = $_POST['lastname'];
     $email = $_POST['email'];
 
+
+
     $sql = "UPDATE `user_details` SET `firstname`='$firstname',`lastname`='$lastname',`email`='$email' WHERE `email` =  '$storedEmail' ";
     $result = $conn->query($sql);
+
     if ($result) {
 
         echo 'Records updated';
 
-        $sql = "SELECT `*` FROM `user_details`";
+        $sql = "SELECT `*` FROM `user_details` WHERE `firstname` = '$firstname'";
         $result = $conn->query($sql);
         $updated = $result->fetch_assoc();
 
